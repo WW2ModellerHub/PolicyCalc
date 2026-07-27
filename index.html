@@ -458,7 +458,7 @@ footer{border-top:1.5px solid var(--line);padding:20px 24px;text-align:center;fo
   const state = { value:270000, bill:2280, band:'D', role:'owner', status:'main', timing:'existing', move:'no', billEdited:false };
 
   // ---------- helpers ----------
-  const £ = n => '£' + Math.round(n).toLocaleString('en-GB');
+  const fmt = n => '£' + Math.round(n).toLocaleString('en-GB');
   const parseNum = s => { const n = parseFloat(String(s).replace(/[^0-9.]/g,'')); return isNaN(n)?0:n; };
   const el = id => document.getElementById(id);
 
@@ -498,25 +498,25 @@ footer{border-top:1.5px solid var(--line);padding:20px 24px;text-align:center;fo
     const sdKept = showSD && status !== 'main';
 
     // ---- current bill card
-    el('nowCT').textContent = £(yourNow);
+    el('nowCT').textContent = fmt(yourNow);
     el('nowBillLbl').textContent = tenantView ? 'Annual council tax (you pay)' : 'Annual council tax';
-    el('nowTotal').textContent = £(yourNow);
-    el('nowMonthly').textContent = £(yourNow/12);
+    el('nowTotal').textContent = fmt(yourNow);
+    el('nowMonthly').textContent = fmt(yourNow/12);
     el('nowSDRow').style.display = showSD ? '' : 'none';
-    el('nowSD').textContent = £(sdNow);
+    el('nowSD').textContent = fmt(sdNow);
     el('nowNote').textContent = tenantView
       ? 'Paid by you, the tenant, under the current system.'
       : 'Based on your council tax band and local rate.';
 
     // ---- PPT card
-    el('pptBasis').textContent = (rate*100).toFixed(2) + '% × ' + £(value);
-    el('pptRaw').textContent = £(tenantView?0:raw);
+    el('pptBasis').textContent = (rate*100).toFixed(2) + '% × ' + fmt(value);
+    el('pptRaw').textContent = fmt(tenantView?0:raw);
     el('capRow').style.display = capApplied ? '' : 'none';
     el('capAdj').textContent = '−£' + Math.round(raw - ppt).toLocaleString('en-GB');
     el('pptSDRow').style.display = showSD ? '' : 'none';
-    el('pptSD').textContent = sdKept ? £(sdlt(value,false)) : '£0';
-    el('pptTotal').textContent = £(yourPPT);
-    el('pptMonthly').textContent = £(yourPPT/12);
+    el('pptSD').textContent = sdKept ? fmt(sdlt(value,false)) : '£0';
+    el('pptTotal').textContent = fmt(yourPPT);
+    el('pptMonthly').textContent = fmt(yourPPT/12);
     el('pptNote').textContent = tenantView
       ? 'The owner becomes liable — your direct bill is £0.'
       : (capApplied ? 'Cap held while you own the home; a buyer would pay the full rate.' :
@@ -531,15 +531,15 @@ footer{border-top:1.5px solid var(--line);padding:20px 24px;text-align:center;fo
       title = 'About the same';
       body = 'Your property value and current bill roughly balance out under the proposed 0.48% rate.';
     } else if(diff > 0){
-      stamp.className = 'stamp save'; stamp.innerHTML = 'Saving<br>' + £(diff) + ' / yr';
+      stamp.className = 'stamp save'; stamp.innerHTML = 'Saving<br>' + fmt(diff) + ' / yr';
       title = tenantView ? 'Your bill would disappear' : 'You\'d pay less';
       body = tenantView
-        ? 'Liability shifts to your landlord, so your direct saving is your full council tax bill of <b>' + £(yourNow) + '</b> a year — though some cost may be passed through rent.'
-        : 'That\'s <b>' + £(diff/12) + ' a month</b> back. Roughly 3 in 4 households — mostly outside London and the South East — are estimated to gain under the proposal.';
+        ? 'Liability shifts to your landlord, so your direct saving is your full council tax bill of <b>' + fmt(yourNow) + '</b> a year — though some cost may be passed through rent.'
+        : 'That\'s <b>' + fmt(diff/12) + ' a month</b> back. Roughly 3 in 4 households — mostly outside London and the South East — are estimated to gain under the proposal.';
     } else {
-      stamp.className = 'stamp rise'; stamp.innerHTML = 'Increase<br>' + £(-diff) + ' / yr';
+      stamp.className = 'stamp rise'; stamp.innerHTML = 'Increase<br>' + fmt(-diff) + ' / yr';
       title = 'You\'d pay more';
-      body = 'An extra <b>' + £(-diff/12) + ' a month</b>. Increases fall mainly on higher-value homes' +
+      body = 'An extra <b>' + fmt(-diff/12) + ' a month</b>. Increases fall mainly on higher-value homes' +
         (capApplied ? ', but the transitional cap is limiting your rise to £1,200 a year while you own the home.' :
          (capEligible ? '.' : ' — and no cap applies in this scenario.'));
     }
@@ -550,12 +550,12 @@ footer{border-top:1.5px solid var(--line);padding:20px 24px;text-align:center;fo
 
     let badges = '';
     if(capApplied) badges += '<span class="badge cap">£1,200 CAP APPLIED</span>';
-    if(showSD && !sdKept && sdNow>0) badges += '<span class="badge sd">STAMP DUTY SAVED ON MOVE: ' + £(sdNow) + '</span>';
+    if(showSD && !sdKept && sdNow>0) badges += '<span class="badge sd">STAMP DUTY SAVED ON MOVE: ' + fmt(sdNow) + '</span>';
     el('verdictBadges').innerHTML = badges;
 
     // ---- facts
     const breakeven = state.bill / rate;
-    el('factBreakeven').textContent = £(breakeven);
+    el('factBreakeven').textContent = fmt(breakeven);
     el('factBreakevenD').textContent = tenantView
       ? 'Break-even value for your landlord — below this, the owner pays less than your current bill'
       : 'Break-even value: with your current bill, a home below this would save under PPT';
